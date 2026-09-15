@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contract-evr.local/schemas/engine_record.v1.json",
+  "title": "Contract-EVR domain record v1",
+  "oneOf": [
+    {"$ref": "#/$defs/expertOpinion"},
+    {"$ref": "#/$defs/sourceUnit"},
+    {"$ref": "#/$defs/requirementPackage"},
+    {"$ref": "#/$defs/candidateEvidence"},
+    {"$ref": "#/$defs/claimJudgement"},
+    {"$ref": "#/$defs/packageAggregation"},
+    {"$ref": "#/$defs/retiredTombstone"},
+    {"$ref": "#/$defs/overrideEnvelope"},
+    {"$ref": "#/$defs/failureEvent"}
+  ],
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stringList": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "base": {
+      "type": "object",
+      "required": ["schema_version", "record_type", "project_id"],
+      "properties": {
+        "schema_version": {"const": "contract_evr.record.v1"},
+        "record_type": {"type": "string"},
+        "project_id": {"type": "string", "minLength": 1},
+        "extensions": {"type": "object"}
+      }
+    },
+    "expertOpinion": {
+      "allOf": [
+        {"$ref": "#/$defs/base"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["schema_version", "record_type", "project_id", "opinion_id", "text", "text_sha256"],
+          "properties": {
+            "schema_version": {"const": "contract_evr.record.v1"},
+            "record_type": {"const": "expert_opinion"},
+            "project_id": {"type": "string", "minLength": 1},
+            "opinion_id": {"type": "string", "minLength": 1},
+            "text": {"type": "string", "minLength": 1},
+            "text_sha256": {"$ref": "#/$defs/hash"},
+            "extensions": {"type": "object"}
+          }
+        }
+      ]
+    },
+    "sourceUnit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "record_type", "project_id", "source_unit_id", "source_role", "eligible_as_completion_evidence", "text", "locator"],
+      "properties": {
+        "schema_version": {"const": "contract_evr.record.v1"},
+        "record_type": {"const": "source_unit"},
+        "project_id": {"type": "string", "minLength": 1},
+        "source_unit_id": {"type": "string", "minLength": 1},
+        "source_role": {"enum": ["revised_plan_body", "revised_plan_table", "revised_plan_figure", "controlled_attachment_substance", "expert_requirement", "review_opinion", "verification_or_approval", "response_or_modification_statement", "unknown"]},
+        "eligible_as_completion_evidence": {"type": "boolean"},
+        "text": {"type": "string"},
+        "locator": {"type": "object"},
+        "extensions": {"type": "object"}
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim_id", "required_result"],
+      "properties": {
+        "claim_id": {"type": "string", "minLength": 1},
+        "required_result": {"type": "string", "minLength": 1},
+        "extensions": {"type": "object"}
+      }
+    },
+    "requirementPackage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "record_type", "project_id", "opinion_id", "requirement_id", "goal", "operator", "claims"],
+      "properties": {
+        "schema_version": {"const": "contract_evr.record.v1"},
+        "record_type": {"const": "requirement_package"},
+        "project_id": {"type": "string", "minLength": 1},
+        "opinion_id": {"type": "string", "minLength": 1},
+        "requirement_id": {"type": "string", "minLength": 1},
+        "goal": {"type": "string", "minLength": 1},
+        "operator": {"enum": ["ALL_OF", "ANY_OF"]},
+        "claims": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/claim"}},
+        "extensions": {"type": "object"}
+      }
+    },
+    "candidateEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "record_type", "project_id", "claim_id", "candidate_ids"],
+      "properties": {
+        "schema_version": {"const": "contract_evr.record.v1"},
+        "record_type": {"const": "candidate_evidence"},
+        "project_id": {"type": "string", "minLength": 1},
+        "claim_id": {"type": "string", "minLength": 1},
+        "candidate_ids": {"$ref": "#/$defs/stringList"},
+        "extensions": {"type": "object"}
+      }
+    },
+    "claimJudgement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "record_type", "project_id", "claim_id", "label", "selected_evidence_unit_ids", "reasoning"],
+      "properties": {
+        "schema_version": {"const": "contract_evr.record.v1"},
+        "record_type": {"const": "claim_judgement"},
+        "project_id": {"type": "string", "minLength": 1},
+        "claim_id": {"type": "string", "minLength": 1},
+        "label": {"enum": ["ENTAILED", "PARTIALLY_ENTAILED", "CONTRADICTED", "NOT_FOUND", "NOT_APPLICABLE", "UNCERTAIN"]},
+        "selected_evidence_unit_ids": {"$ref": "#/$defs/stringList"},
+        "reasoning": {"type": "string", "minLength": 1},
+        "extensions": {"type": "object"}
+      }
+    },
+    "packageAggregation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "record_type", "project_id", "requirement_id", "operator", "claim_labels", "package_label"],
+      "properties": {
+        "schema_version": {"const": "contract_evr.record.v1"},
+        "record_type": {"const": "package_aggregation"},
+        "project_id": {"type": "string", "minLength": 1},
+        "requirement_id": {"type": "string", "minLength": 1},
+        "operator": {"enum": ["ALL_OF", "ANY_OF"]},
+        "claim_labels": {"type": "object", "minProperties": 1, "additionalProperties": {"enum": ["ENTAILED", "PARTIALLY_ENTAILED", "CONTRADICTED", "NOT_FOUND", "NOT_APPLICABLE", "UNCERTAIN"]}},
+        "package_label": {"enum": ["sufficient", "partial", "insufficient", "contradicted", "not_applicable", "uncertain"]},
+        "extensions": {"type": "object"}
+      }
+    },
+    "retiredTombstone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "record_type", "project_id", "opinion_id", "requirement_id", "retired_claim_ids", "reason", "source_contract_id"],
+      "properties": {
+        "schema_version": {"const": "contract_evr.record.v1"},
+        "record_type": {"const": "retired_tombstone"},
+        "project_id": {"type": "string", "minLength": 1},
+        "opinion_id": {"type": "string", "minLength": 1},
+        "requirement_id": {"type": "string", "minLength": 1},
+        "retired_claim_ids": {"$ref": "#/$defs/stringList"},
+        "reason": {"type": "string", "minLength": 1},
+        "source_contract_id": {"type": "string", "minLength": 1},
+        "extensions": {"type": "object"}
+      }
+    },
+    "overrideEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "record_type", "project_id", "target_type", "target_id", "old_value_hash", "field_changes", "reason", "authorization_ref"],
+      "properties": {
+        "schema_version": {"const": "contract_evr.record.v1"},
+        "record_type": {"const": "override_envelope"},
+        "project_id": {"type": "string", "minLength": 1},
+        "target_type": {"enum": ["claim_judgement", "package_aggregation"]},
+        "target_id": {"type": "string", "minLength": 1},
+        "old_value_hash": {"$ref": "#/$defs/hash"},
+        "field_changes": {"type": "object", "minProperties": 1},
+        "reason": {"type": "string", "minLength": 1},
+        "authorization_ref": {"type": "string", "minLength": 1},
+        "extensions": {"type": "object"}
+      }
+    },
+    "failureEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "record_type", "project_id", "failure_type", "stage", "recoverable", "message"],
+      "properties": {
+        "schema_version": {"const": "contract_evr.record.v1"},
+        "record_type": {"const": "failure_event"},
+        "project_id": {"type": "string", "minLength": 1},
+        "failure_type": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "recoverable": {"type": "boolean"},
+        "message": {"type": "string", "minLength": 1},
+        "extensions": {"type": "object"}
+      }
+    }
+  }
+}

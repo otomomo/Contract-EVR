@@ -1,0 +1,84 @@
+.agents/
+.codex/
+.git/
+.gitrepo/
+.idea/
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+.env
+.env.*
+.venv/
+venv/
+
+*.log
+*.tmp
+*.bak
+*.Zone.Identifier
+*:Zone.Identifier
+
+# Large source documents and generated MinerU artifacts.
+expert_review_projects/**/*.pdf
+expert_review_projects/**/mineru_output/
+data/mineru_output/
+
+# Local model weights and generated/cache files.
+mineru/models/
+mineru/batch_logs/
+
+# Research-history and generated release artifacts.  Keep these out of the
+# source repository; frozen fixtures under data/frozen/ remain shareable.
+archive/
+experiments/
+outputs/
+figure-studio-runs/
+logs/
+build/
+dist/
+dist_release/
+dist_release_final/
+contract_evr.egg-info/
+tools/latex-runtime/
+expert_review_projects/**/mineru_output/
+
+# Local audit/intermediate data; publish only explicitly selected fixtures.
+data/audit/
+data/evidence_bundles_v3/
+data/evidence_candidates_v3/
+data/requirement_routing_v3/
+data/structure_maps_v2_llm/
+data/page_mapping/
+
+# Project-specific inputs, outputs, and derived research records.
+# These directories may contain source documents, expert opinions,
+# evidence text, model requests/responses, or other confidential material.
+data/
+expert_review_projects/
+quarantine/
+configs/
+docs/
+outputs/
+tests/
+tools/
+
+# Keep only the generic, reviewed evaluation utilities trackable under scripts.
+scripts/*
+!scripts/evaluation/
+!scripts/evaluation/*.py
+
+# Local MinerU application code is not part of this public-safe release;
+# model weights and caches are always excluded.
+mineru/
+!mineru/README.md
+!mineru/requirements.txt
+!mineru/environment.yml
+mineru/models/
+
+# Other local runtimes and generated application state.
+.local/
+.runtime/
+NUL
+.p001_true_intent_pilot_policy.json
+awesome-ai-research-writing-skills-guide.md

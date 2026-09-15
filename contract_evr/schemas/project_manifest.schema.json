@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contract-evr.local/schemas/project_manifest.v1.json",
+  "title": "Contract-EVR project manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "project_id",
+    "dataset_role",
+    "inputs",
+    "id_namespace",
+    "adapter",
+    "policies",
+    "providers",
+    "budget",
+    "allowed_modes",
+    "output_root",
+    "protected_manifest"
+  ],
+  "properties": {
+    "schema_version": {"const": "contract_evr.project_manifest.v1"},
+    "project_id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+    "dataset_role": {"enum": ["development", "held_out", "portability_fixture"]},
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["opinions", "document", "structure_map", "content_units"],
+      "properties": {
+        "opinions": {"$ref": "#/$defs/fileRef"},
+        "document": {"$ref": "#/$defs/fileRef"},
+        "structure_map": {"$ref": "#/$defs/fileRef"},
+        "content_units": {"$ref": "#/$defs/fileRef"},
+        "selection_manifest": {"$ref": "#/$defs/fileRef"}
+      }
+    },
+    "id_namespace": {"type": "string", "minLength": 1},
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "config": {"type": "object"}
+      }
+    },
+    "policies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "aggregation"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "aggregation": {"type": "string", "minLength": 1}
+      }
+    },
+    "providers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model", "retrieval"],
+      "properties": {
+        "model": {"type": "string", "minLength": 1},
+        "retrieval": {"type": "string", "minLength": 1}
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_model_calls", "max_retrieval_calls", "max_input_tokens", "max_output_tokens", "max_retries"],
+      "properties": {
+        "max_model_calls": {"type": "integer", "minimum": 0},
+        "max_retrieval_calls": {"type": "integer", "minimum": 0},
+        "max_input_tokens": {"type": "integer", "minimum": 0},
+        "max_output_tokens": {"type": "integer", "minimum": 0},
+        "max_retries": {"type": "integer", "minimum": 0}
+      }
+    },
+    "allowed_modes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["validate", "dry-run", "fixture", "replay", "regression", "live"]}
+    },
+    "output_root": {"type": "string", "minLength": 1},
+    "protected_manifest": {"type": "string", "minLength": 1},
+    "extensions": {"type": "object"}
+  },
+  "$defs": {
+    "fileRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}
