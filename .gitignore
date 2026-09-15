@@ -58,6 +58,8 @@ data/
 expert_review_projects/
 quarantine/
 configs/
+!configs/
+!configs/example_config.yaml
 docs/
 outputs/
 tests/
@@ -82,3 +84,7 @@ mineru/models/
 NUL
 .p001_true_intent_pilot_policy.json
 awesome-ai-research-writing-skills-guide.md
+
+# Generated output from the synthetic demonstration; keep only its authored
+# input and expected result in version control.
+examples/synthetic/output.json

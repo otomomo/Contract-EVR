@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contract-evr.local/examples/synthetic/input.v1.json",
+  "title": "Contract-EVR synthetic fixture input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "project_id",
+    "opinions",
+    "packages",
+    "source_units",
+    "candidate_ids_by_claim",
+    "provider_responses"
+  ],
+  "properties": {
+    "project_id": {"type": "string", "pattern": "^synthetic-[a-z0-9-]+$"},
+    "opinions": {
+      "type": "array", "minItems": 1,
+      "items": {"type": "object", "required": ["opinion_id"], "additionalProperties": false, "properties": {"opinion_id": {"type": "string"}}}
+    },
+    "packages": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["requirement_id", "goal", "operator", "claims"],
+        "properties": {
+          "requirement_id": {"type": "string"},
+          "goal": {"type": "string", "minLength": 1},
+          "operator": {"enum": ["ALL_OF", "ANY_OF"]},
+          "claims": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["claim_id", "required_result"], "properties": {"claim_id": {"type": "string"}, "required_result": {"type": "string", "minLength": 1}}}}
+        }
+      }
+    },
+    "source_units": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["source_unit_id", "source_role", "document_role", "section_path", "content_type", "text", "locator"],
+        "properties": {
+          "source_unit_id": {"type": "string"},
+          "source_role": {"enum": ["revised_plan_body", "review_opinion"]},
+          "document_role": {"type": "string"},
+          "section_path": {"type": "array", "items": {"type": "string"}},
+          "content_type": {"type": "string"},
+          "text": {"type": "string"},
+          "locator": {"type": "object"}
+        }
+      }
+    },
+    "candidate_ids_by_claim": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string"}}},
+    "provider_responses": {
+      "type": "object", "minProperties": 1,
+      "additionalProperties": {
+        "type": "object", "additionalProperties": false,
+        "required": ["label", "selected_evidence_unit_ids", "reasoning"],
+        "properties": {
+          "label": {"enum": ["ENTAILED", "PARTIALLY_ENTAILED", "CONTRADICTED", "NOT_FOUND", "NOT_APPLICABLE", "UNCERTAIN"]},
+          "selected_evidence_unit_ids": {"type": "array", "items": {"type": "string"}},
+          "reasoning": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

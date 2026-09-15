@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "mode": "fake",
+  "project_id": "synthetic-demo",
+  "counts": {
+    "opinions": 1,
+    "packages": 1,
+    "claims": 2,
+    "source_units": 2
+  },
+  "claim_labels": {
+    "claim-duration-01": "ENTAILED",
+    "claim-frequency-01": "ENTAILED"
+  },
+  "package_labels": {
+    "req-monitoring-01": "sufficient"
+  },
+  "execution_counters": {
+    "model_calls": 0,
+    "retrieval_calls": 0
+  }
+}

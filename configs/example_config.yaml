@@ -1,0 +1,8 @@
+# Public example only. All paths and identifiers are synthetic.
+model: local-llm-placeholder
+temperature: 0
+context_limit_tokens: 8192
+candidate_evidence_limit: 8
+external_calls: false
+input: examples/synthetic/input.json
+expected_output: examples/synthetic/expected_output.json

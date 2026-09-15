@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contract-evr.local/examples/synthetic/output.v1.json",
+  "title": "Contract-EVR synthetic runtime output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["run_id", "status", "mode", "project_id", "counts", "execution_counters", "claim_judgements", "package_aggregations", "canonical_result_sha256"],
+  "properties": {
+    "run_id": {"type": "string"},
+    "status": {"const": "passed"},
+    "mode": {"const": "fake"},
+    "project_id": {"type": "string", "pattern": "^synthetic-[a-z0-9-]+$"},
+    "counts": {"type": "object", "required": ["opinions", "packages", "claims", "source_units"], "additionalProperties": false, "properties": {"opinions": {"type": "integer", "minimum": 0}, "packages": {"type": "integer", "minimum": 0}, "claims": {"type": "integer", "minimum": 0}, "source_units": {"type": "integer", "minimum": 0}}},
+    "execution_counters": {"type": "object", "required": ["model_calls", "retrieval_calls"], "additionalProperties": false, "properties": {"model_calls": {"const": 0}, "retrieval_calls": {"const": 0}}},
+    "claim_judgements": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "package_aggregations": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "canonical_result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "project_id": "synthetic-demo",
+  "opinions": [
+    {"opinion_id": "op-demo-01"}
+  ],
+  "packages": [
+    {
+      "requirement_id": "req-monitoring-01",
+      "goal": "The revised document must specify monitoring duration and frequency.",
+      "operator": "ALL_OF",
+      "claims": [
+        {
+          "claim_id": "claim-duration-01",
+          "required_result": "Monitoring duration is specified."
+        },
+        {
+          "claim_id": "claim-frequency-01",
+          "required_result": "Monitoring frequency is specified."
+        }
+      ]
+    }
+  ],
+  "source_units": [
+    {
+      "source_unit_id": "source-eligible-01",
+      "source_role": "revised_plan_body",
+      "document_role": "synthetic_document",
+      "section_path": ["Vegetation Monitoring"],
+      "content_type": "text",
+      "text": "Monitoring will continue for two years, with surveys once every quarter.",
+      "locator": {"section": "Vegetation Monitoring"}
+    },
+    {
+      "source_unit_id": "source-context-01",
+      "source_role": "review_opinion",
+      "document_role": "synthetic_context",
+      "section_path": ["Review Context"],
+      "content_type": "text",
+      "text": "The reviewer requests clearer monitoring details.",
+      "locator": {"section": "Review Context"}
+    }
+  ],
+  "candidate_ids_by_claim": {
+    "claim-duration-01": ["source-eligible-01", "source-context-01"],
+    "claim-frequency-01": ["source-eligible-01", "source-context-01"]
+  },
+  "provider_responses": {
+    "claim:claim-duration-01:judgement": {
+      "label": "ENTAILED",
+      "selected_evidence_unit_ids": ["source-eligible-01"],
+      "reasoning": "The eligible source states a two-year monitoring duration."
+    },
+    "claim:claim-frequency-01:judgement": {
+      "label": "ENTAILED",
+      "selected_evidence_unit_ids": ["source-eligible-01"],
+      "reasoning": "The eligible source states quarterly surveys."
+    }
+  }
+}
